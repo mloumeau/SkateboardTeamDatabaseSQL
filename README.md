@@ -23,13 +23,11 @@ For this project, I used SQLite3 (in the command line), the python sqlite3 modul
 
 # Useful Websites
 
-{Make a list of websites that you found helpful in this project}
 * [SQLite3 Python Tutorial](https://likegeeks.com/python-sqlite3-tutorial/)
 * [Wikipedia for Skateboard Team Info](https://en.wikipedia.org/wiki/Baker_Skateboards)
 
 # Future Work
 
-{Make a list of things that you need to fix, improve, and add in the future.}
 * Verify information with members in the community
 * Create a website to display the info
 * Learn to implement SQL databases with HTML/JavaScript
