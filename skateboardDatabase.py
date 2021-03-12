@@ -3,6 +3,7 @@ from sqlite3 import Error
 from datetime import datetime
 
 
+#Connect the database with this python program
 def sql_connection():
 
     try:
@@ -13,8 +14,11 @@ def sql_connection():
         print(Error)
 
 
+#Create all the tables of teams
 def sql_table(con):
+
     cursorObj = con.cursor()
+
     cursorObj.execute("create table if not exists Almost(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists April(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists AntiHero(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
@@ -48,12 +52,16 @@ def sql_table(con):
     con.commit()
 
 
+#Insert information into a table
 def sql_insert(con, table, entities):
 
     cursorObj = con.cursor()
+    #Replace creates a new one if one isn't there, and overrides something if it already exists
     cursorObj.execute(f'REPLACE INTO {table}(Name, Age, HomeTown, stance) VALUES(?, ?, ?, ?)', entities)
     con.commit()
 
+
+#This updates data without deleting and recreating
 def sql_update(con, table, set, setValue, where, whereValue):
 
     cursorObj = con.cursor()
@@ -61,6 +69,7 @@ def sql_update(con, table, set, setValue, where, whereValue):
     con.commit()
 
 
+#This retrieves data for the console to output
 def sql_fetch(con, table):
 
     cursorObj = con.cursor()
@@ -77,6 +86,8 @@ con = sql_connection()
 
 sql_table(con)
 
+
+#Create all the teams as lists, and each element in the list the information of a skater
 
 almost = []
 
@@ -274,7 +285,7 @@ krooked =  [('Mark Gonzales', 1968, 'South Gate, CA', 'Goofy'),
             ('Mike Anderson', 1990, 'Ventura, CA', 'Goofy'),
             ('Brad Cromer', 1988, 'Palm Beach Gardens, FL', 'Regular')]
 
-            
+
 pizza = []
 
 
