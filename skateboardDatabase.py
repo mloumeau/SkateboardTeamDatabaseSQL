@@ -15,6 +15,7 @@ def sql_connection():
 
 def sql_table(con):
     cursorObj = con.cursor()
+    cursorObj.execute("create table if not exists Almost(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists April(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists AntiHero(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists Baker(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
@@ -26,13 +27,16 @@ def sql_table(con):
     cursorObj.execute("create table if not exists Deathwish(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists Element(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists Enjoi(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
+    cursorObj.execute("create table if not exists FA(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
+    cursorObj.execute("create table if not exists Flip(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists Foundation(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists Girl(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
+    cursorObj.execute("create table if not exists Habitat(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists Heroin(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists Madness(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists Krooked(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
+    cursorObj.execute("create table if not exists Pizza(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists PlanB(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
-    cursorObj.execute("create table if not exists PowellPeralta(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists Primitive(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists Real(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
     cursorObj.execute("create table if not exists SantaCruz(Name text PRIMARY KEY, Age text, HomeTown text, stance text)")
@@ -74,7 +78,12 @@ con = sql_connection()
 sql_table(con)
 
 
-april=[]
+almost = []
+
+
+april =    [('Shane ONeill', 1990, 'Melbourne, Australia', 'Goofy'),
+            ('Yuto Horigome', 1999, 'Tokyo, Japan', 'Regular')]
+
 
 antiHero = [('John Cardiel', 1973, 'Sacramento, CA', 'Goofy'), 
             ('Frank Gerwer', 1974, 'Long Island, NY', 'Regular'),
@@ -118,7 +127,14 @@ birdhouse =[('Tony Hawk', 1969, 'Carlsbad, CA', 'Goofy'),
             ('Elliot Sloan', 1989, 'New York, NY', 'Goofy')]
 
 
-blind=[]
+blind =    [('Jordan Maxham', 1991, 'Barre, VT', 'Goofy'),
+            ('TJ Rogers', 1992, 'Ontario, Canada', 'Regular'),
+            ('Cody McEntire', 1988, 'Belton, TX', 'Regular'),
+            ('Kevin Romar', 1989, 'Cypress, CA', 'Goofy'),
+            ('Micky Papa', 1991, 'Vancouver B.C., Canada', 'Regular'),
+            ('Nassim Lachlab', 1997, 'Rabat Maroc, Morocco', 'Goofy'),
+            ('Sora Shirai', 2002, 'Kanagawa, Japan', 'Goofy'),
+            ('Jason Thurtle', 1997, 'Las Vegas, NV', 'Goofy')]
 
 
 bloodWizard=[('Chris Gregson', 1991, 'Irvine, CA', 'Goofy'),
@@ -190,6 +206,24 @@ enjoi =    [('Ben Raemers', 1991, 'Walton-on-naze, United Kingdom', 'Regular'),
             ('Zack Wallin', 1989, 'San Jose, CA', 'Goofy')]
 
 
+FA =       [('Jason Dill', 1977, 'Los Angeles, CA', 'Regular'),
+            ('Anthony Van Engelen', 1979, 'Los Angeles, CA', 'Regular'),
+            ('Na-Kel Smith', 1995, 'Los Angeles, CA', 'Regular'),
+            ('Kevin Bradley', 1996, 'Los Angeles, CA', 'Goofy'),
+            ('Gino Iannucci', 1982, 'Los Angeles, CA', 'Goofy'),
+            ('Kevin Terpening', 1988, 'Canton, OH', 'Goofy'),
+            ('Tyshawn Jones', 1999, 'Bronx, NY', 'Regular'),
+            ('Sage Elsesser', 1997, 'Los Angeles, CA', 'Regular'),
+            ('Sean Pablo', 1998, 'Los Angeles, CA', 'Regular'),
+            ('Elijah Berle', 1995, 'Santa Monica, CA', 'Goofy'),
+            ('Aidan Mackey', 1990, 'Los Angeles, CA', 'Regular'),
+            ('Louie Lopez', 1995, 'Hawthorne, CA', 'Regular'),
+            ('Vincent Touzery', 1990, 'Paris, France', 'Regular')]
+
+
+flip = []
+
+
 foundation=[('Nick Merlino', 1988, 'Atlantic City, NJ', 'Regular'),
             ('Dakota Servold', 1993, 'Phoenix, AZ', 'Goofy'),
             ('Joey Ragali', 1990, 'Jupiter, FL', 'Regular'),
@@ -214,7 +248,16 @@ girl =     [('Sean Malto', 1990, 'Kansas City, KS', 'Regular'),
             ('Breanna Geering', 1999, 'Kelowna, Canada', 'Goofy'),
             ('Rowan Davis', 2000, 'New Castle, Australia', 'Regular')]
 
-heroin=[]
+
+habitat = []
+
+
+heroin =   [('Chet Childress', 1972, 'Wilmington, NC', 'Regular'),
+            ('Daniel Shimizu', 1982, 'Los Feliz, CA', 'Regular'),
+            ('Craig Scott', 1990, 'N/A', 'Regular'),
+            ('Tony Karr', 1993, 'Los Angeles, CA', 'Goofy'),
+            ('Lee Yankou', 1990, 'Toronto, Canada', 'Regular'),
+            ('Tom Day', 1990, 'N/A', 'Regular')]
 
 
 madness =  [('Clay Kreiner', 1997, 'Simpsonville, SC', 'Regular'),
@@ -230,14 +273,38 @@ krooked =  [('Mark Gonzales', 1968, 'South Gate, CA', 'Goofy'),
             ('Dan Drehobl', 1972, 'Brunswich, Maine', 'Regular'),
             ('Mike Anderson', 1990, 'Ventura, CA', 'Goofy'),
             ('Brad Cromer', 1988, 'Palm Beach Gardens, FL', 'Regular')]
+
             
-planB=[]
+pizza = []
 
 
-powellPeralta=[]
+planB =    [('Chris Joslin', 1997, 'Cerritos, CA', 'Regular'),
+            ('Felipe Gustavo', 1991, 'Brasilia, Brazil', 'Goofy'),
+            ('Aurelien Giraud', 2000, 'Lyon, France', 'Goofy'),
+            ('Tommy Fynn', 1989, 'Brisbane, Australia', 'Goofy'),
+            ('Ryan Sheckler', 1990, 'San Clemente, CA', 'Regular'),
+            ('Pat Duffy', 1974, 'San Francisco, CA', 'Goofy'),
+            ('Trevor McClung', 1991, 'Huntington Beach, CA', 'Regular'),
+            ('PJ Ladd', 1983, 'Boston, MA', 'Regular'),
+            ('Danny Way', 1975, 'Portland, OR', 'Regular'),
+            ('Colin McKay', 1979, 'Vancouver B.C, Canada', 'Goofy'),
+            ('Sean Sheffey', 1980, 'San Diego, CA', 'Regular')]
 
 
-primitive=[]
+
+primitive =[('Paul Rodriguez', 1985, 'Los Angeles, CA', 'Goofy'),
+            ('Tiago Lemos', 1992, 'Jaguariuna SP, Brazil', 'Goofy'),
+            ('Miles Silvas', 1996, 'Sacramento, CA', 'Regular'),
+            ('Carlos Ribeiro', 1992, 'Novo Hamburgo, Brazil', 'Regular'),
+            ('Wade Desarmo', 1985, 'Ottawa Ontario, Canada', 'Goofy'),
+            ('Spencer Hamilton', 1989, 'Ottawa Ontario, Canada', 'Regular'),
+            ('Franky Villani', 1996, 'Santa Ana, CA', 'Regular'),
+            ('Trent McClung', 1994, 'Huntington Beach, CA', 'Goofy'),
+            ('Robert Neal', 1999, 'Long Beach, CA', 'Regular'),
+            ('Marek Zaprazny', 1990, 'Malacky Slovak, Republic Slovakia', 'Goofy'),
+            ('JB Gillet', 1990, 'Lyon, France', 'Regular'),
+            ('Brian Peacock', 1989, 'Newark, DE', 'Regular'),
+            ('Giovanni Vianna', 2001, 'Santo Andrew, Brazil', 'Regular')]
 
 
 real =     [('Dennis Busenitz', 1981, 'Newton, KS', 'Goofy'),
@@ -273,7 +340,16 @@ santaCruz =[('Blake Johnson', 1992, 'Venice, CA', 'Regular'),
             ('Yndiara Asp', 1998, 'Florianopolis, Brazil', 'Goofy')]
 
 
-sk8Mafia=[]
+sk8Mafia = [('Kellen James', 1990, 'San Diego, CA', 'Goofy'),
+            ('Brandon Turner', 1978, 'San Diego, CA', 'Regular'),
+            ('Peter Smolik', 1977, 'San Diego, CA', 'Goofy'),
+            ('Jimmy Cao', 1988, 'San Diego, CA', 'Regular'),
+            ('Jamie Palmore', 1987, 'San Diego, CA', 'Goofy'),
+            ('Marshall Heath', 1989, 'Huntington, VT', 'Goofy'),
+            ('Larelle Gray', 1988, 'San Diego, CA', 'Regular'),
+            ('Wes Kremer', 1990, 'San Diego, CA', 'Goofy'),
+            ('Tyler Surrey', 1988, 'San Diego, CA', 'Goofy'),
+            ('Javier Sarmiento', 1981, 'Vitoria, Spain', 'Goofy')]
 
 
 toyMachine=[('Ed Templeton', 1973, 'Huntington Beach, CA', 'Regular'),
@@ -290,7 +366,16 @@ toyMachine=[('Ed Templeton', 1973, 'Huntington Beach, CA', 'Regular'),
             ('Myles Willard', 1997, 'Baltimore, MD', 'Regular')]
 
 
-welcome=[]
+welcome =  [('Nora Vasconcellos', 1993, 'Boston, MA', 'Regular'),
+            ('Daniel Vargas', 1994, 'Lake Forrest, CA', 'Regular'),
+            ('Roman Pabich', 2002, 'Ocean City, MD', 'Goofy'),
+            ('Jason Salillas', 1999, 'Birmingham, AL', 'Goofy'),
+            ('Jordan Sanchez', 1996, 'Everett, WA', 'Regular'),
+            ('Rick Fabro', 1996, 'San Pedro, CA', 'Goofy'),
+            ('Ryan Lay', 1989, 'Mesa, AZ', 'Regular'),
+            ('Will Blaty', 1994, 'Gilbert, AZ', 'Regular'),
+            ('Ryan Townley', 1991, 'Anaheim Hills, CA', 'Regular'),
+            ('Aaron Goure', 1996, 'Tempe, AZ', 'Goofy')]
 
 
 zero =     [('Jamie Thomas', 1974, 'Dothan, AL', 'Regular'),
@@ -308,7 +393,8 @@ zero =     [('Jamie Thomas', 1974, 'Dothan, AL', 'Regular'),
 
 
 #Make a list of the team info, and the corresponding table name (tuples)
-teams = [(april, 'April'),
+teams = [(almost, 'Almost'),
+         (april, 'April'),
          (antiHero, 'AntiHero'),
          (baker, 'Baker'),
          (birdhouse, 'Birdhouse'),
@@ -319,13 +405,16 @@ teams = [(april, 'April'),
          (deathWish, 'Deathwish'),
          (element, 'Element'),
          (enjoi, 'Enjoi'),
+         (FA, 'FA'),
+         (flip, 'Flip'),
          (foundation, 'Foundation'),
          (girl, 'Girl'),
+         (habitat, 'Habitat'),
          (heroin, 'Heroin'),
          (madness, 'Madness'),
          (krooked, 'Krooked'),
+         (pizza, 'Pizza'),
          (planB, 'PlanB'),
-         (powellPeralta, 'PowellPeralta'),
          (primitive, 'Primitive'),
          (real, 'Real'),
          (santaCruz, 'SantaCruz'),
