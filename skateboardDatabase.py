@@ -1,6 +1,7 @@
 import sqlite3
 from sqlite3 import Error
 from datetime import datetime
+import time
 
 
 #Connect the database with this python program
@@ -79,17 +80,180 @@ def sql_fetch(con, table):
     for row in rows:
         print(row)
 
+#Collects the amount of members inside a table
+def sql_len(con, table):
+    
+    cursorObj = con.cursor()
+    cursorObj.execute(f"select * from {table}")
+    results = cursorObj.fetchall()
+    return len(results)
 
-con = sql_connection()
+
+#Grabs all instances of Goofy or Regular
+def sql_reg_or_goof(con, table):
+    
+    cursorObj = con.cursor()
+    cursorObj.execute(f"select * from {table}")
+    results = cursorObj.fetchall()
+
+    regular = 0
+    goofy = 0
+    for x in results:
+        if x[3] == 'Regular':
+            regular +=1
+        if x[3] == 'Goofy':
+            goofy+=1
+    return regular, goofy
+
+
+#Determines how many skaters are from a given area
+def sql_from_area(con, table, area):
+    
+    cursorObj = con.cursor()
+    cursorObj.execute(f"select * from {table}")
+    results = cursorObj.fetchall()
+
+    count = 0
+
+    for x in results:
+        if area in x[2]:
+            count+=1
+    return count
+
+#Determines how many skaters are from a given area
+def sql_from_area_names(con, table, area):
+    
+    cursorObj = con.cursor()
+    cursorObj.execute(f"select * from {table}")
+    results = cursorObj.fetchall()
+
+    skatersFromArea=[table.upper()]
+
+    for x in results:
+        if area in x[2]:
+            skatersFromArea.append(x[0])
+    print(skatersFromArea)
+
+
+#Print out all the teams
+def allSkateTeams(teams,con):
+    print('\n\n')
+    for x in teams:
+        print(x[1])
+    print('\n\n\n\n\n')
+    main(con,teams)
+
+
+#Pick a team to see information
+def individualSkateTeam(teams, con):
+    print('\n\n')
+    for x in teams:
+        print(x[1])
+    print('\nSelect Team')
+
+    team = input('Team name: ')
+
+    #This is a fancy way to check if the input is in the list of tuples
+    if [item for item in teams if team in item]:
+        print('\n        NAME     |  AGE  |   HOMEWTOWN   |   STANCE\n')
+        sql_fetch(con, team)
+        print('\n\n\n\n\n')
+        main(con,teams)
+    
+    #If it's not, have them try again
+    else:
+        print('Not a valid team, try again')
+        time.sleep(1.3)
+        individualSkateTeam(teams, con)
+
+
+#Gathers information and displays percentages
+def regVsGoofy(teams,total,con):
+    regular=0
+    goofy=0
+    for team in teams:
+        r, g = sql_reg_or_goof(con, team[1])
+        regular+=r
+        goofy+=g
+
+    print('\n==============================================', "                 STANCE PERCENTAGES", '==============================================\n', sep='\n')
+    print('Regular percentage: {:0.2f}%\nGoofy percentage: {:0.2f}%\n\n\n\n'.format(regular/total*100,goofy/total*100))
+
+    main(con,teams)
+
+
+#See percentage of skaters from a specific area
+def specificArea(states, con, teams):
+
+    stateChoice = input('Enter Area (Use Initials for States):')
+
+    percentage=0
+    total=0
+    for team in teams:
+        percentage += sql_from_area(con, team[1], stateChoice)
+        total += sql_len(con, team[1])
+
+    print('\n==============================================', f"                 PERCENTAGE FROM {stateChoice.upper()}", '==============================================\n', sep='\n')
+    print('Percantage of all pro skaters from {}: {:0.2f}%\n\n\n\n'.format(stateChoice,percentage/total*100))
+
+    main(con,teams)
+
+
+def specificAreaNames(states, con, teams):
+
+    stateChoice = input('Enter Area (Use Initials for States):')
+
+    print('\n==============================================', f"                 SKATERS FROM {stateChoice.upper()}", '==============================================\n', sep='\n')
+    
+    for team in teams:
+        sql_from_area_names(con, team[1], stateChoice)
+
+    print('\n\n')
+
+    main(con,teams)
+
+
+#Display percentage of skaters from all states
+def fromAllArea(con, states, teams, total):
+    fromUS=0
+    noSkaterStates=[]
+    for state in states:
+        fromState=0
+        for team in teams:
+            fromState+=sql_from_area(con, team[1], state)
+        if fromState!=0:
+            fromUS+=fromState
+            print('\n==============================================', f"                 PERCENTAGE FROM {state}", '==============================================\n', sep='\n')
+            print('Percantage of all pro skaters from {}: {:0.2f}%'.format(state,fromState/total*100))
+        else:
+            noSkaterStates.append(state)
+
+    print('\n==============================================', "         PERCENTAGE FROM OUTSIDE US", '==============================================\n', sep='\n')
+    print('Percentage of non-US born skaters: {:0.2f}%'.format(100-fromUS/total*100))
+
+    print('\n==============================================', "         STATES WITH NO PRO SKATERS", '==============================================\n', sep='\n')
+    print('No professional skaters from: {}\n\n\n\n'.format(', '.join(noSkaterStates)))
+
+
+    main(con,teams)
 
 
 
-sql_table(con)
 
 
 #Create all the teams as lists, and each element in the list the information of a skater
 
-almost = []
+almost =   [('Rodney Mullen', 1967, 'Hermosa Beach, CA', 'Regular'),
+            ('Youness Amrani', 1992, 'Hasselt, Belgium', 'Goofy'),
+            ('Yuri Facchini', 1996, 'Parana, Brazil', 'Goofy'),
+            ('Max Geronzi', 1990, 'Perpignan, France', 'Regular'),
+            ('Cooper Wilt', 1988, 'San Pedro, CA', 'Regular'),
+            ('John (Dilo) Dilorenzo', 1994, 'Jupiter FL', 'Regular'),
+            ('Tyson Bowerbank', 1995, 'Salt Lake City, UT', 'Goofy'),
+            ('Fran Molina', 1993, 'El Ejido, Spain', 'Goofy'),
+            ('Mitchie Brusco', 1997, 'Kirkland, WA', 'Goofy'),
+            ('Lewis Marnell', 1983, 'Melbourne, Australia', 'Regular'),
+            ('Sky Brown', 2009, 'Miyazaki, Japan', 'Goofy')]
 
 
 april =    [('Shane ONeill', 1990, 'Melbourne, Australia', 'Goofy'),
@@ -232,7 +396,17 @@ FA =       [('Jason Dill', 1977, 'Los Angeles, CA', 'Regular'),
             ('Vincent Touzery', 1990, 'Paris, France', 'Regular')]
 
 
-flip = []
+flip =     [('Lucas Rabelo', 1999, 'Fortarleza Ceara, Brazil', 'Goofy'),
+            ('Luan Oliveira', 1991, 'Porto Alegre, Brazil', 'Regular'),
+            ('David Gonzalez', 1991, 'Medellin, Colombia', 'Goofy'),
+            ('Alec Majerus', 1996, 'Rochester, MN', 'Goofy'),
+            ('Matt Berger', 1994, 'Kamloops, Canada', 'Regular'),
+            ('Tom Penny', 1978, 'Oxforshire, England', 'Regular'),
+            ('Denny Pham', 1990, 'Berlin, Germany', 'Goofy'),
+            ('Arto Saari', 1982, 'Seinajoki, Finland', 'Regular'),
+            ('Lance Mountain', 1965, 'Alhambra, CA', 'Regular'),
+            ('Rune Glifberg', 1975, 'Copenhagen, Denmark', 'Regular')]
+
 
 
 foundation=[('Nick Merlino', 1988, 'Atlantic City, NJ', 'Regular'),
@@ -260,7 +434,14 @@ girl =     [('Sean Malto', 1990, 'Kansas City, KS', 'Regular'),
             ('Rowan Davis', 2000, 'New Castle, Australia', 'Regular')]
 
 
-habitat = []
+habitat =  [('Silas Baxter-Neal', 1984, 'Portland, OR', 'Goofy'),
+            ('Fred Gall', 1979, 'Sewaren, NJ', 'Regular'),
+            ('Marius Syvanen', 1990, 'Helsinki, Finland', 'Regular'),
+            ('Kerry Getz', 1976, 'Philadelphia, PA', 'Regular'),
+            ('Brian Delatorre', 1987, 'San Francisco, CA', 'Goofy'),
+            ('Daryl Angel', 1989, 'San Jose, CA', 'Regular'),
+            ('Stefan Janoksi', 1980, 'Vacaville, CA', 'Regular'),
+            ('Mark Suciu', 1993, 'Saratoga, CA', 'Goofy')]
 
 
 heroin =   [('Chet Childress', 1972, 'Wilmington, NC', 'Regular'),
@@ -286,7 +467,14 @@ krooked =  [('Mark Gonzales', 1968, 'South Gate, CA', 'Goofy'),
             ('Brad Cromer', 1988, 'Palm Beach Gardens, FL', 'Regular')]
 
 
-pizza = []
+pizza =    [('Zach (Ducky) Kovacs', 1995, 'Modesto, CA', 'Regular'),
+            ('Jesse Vieira', 1995, 'San Francisco, CA', 'Regular'),
+            ('Raul Valencia', 1988, 'Barcelona, Spain', 'Goofy'),
+            ('James Gaehner', 1990, 'Sacramento, CA', 'Regular'),
+            ('Rahim Robinson', 1998, 'Sacramento, CA', 'Regular'),
+            ('David Oakley', 1994, 'Sacramento, CA', 'Goofy'),
+            ('Branson Howard', 1997, 'Nashville, TN', 'Goofy'),
+            ('Marcus Attwood Jr.', 2009, 'Sacramento, CA', 'Goofy')]
 
 
 planB =    [('Chris Joslin', 1997, 'Cerritos, CA', 'Regular'),
@@ -300,7 +488,6 @@ planB =    [('Chris Joslin', 1997, 'Cerritos, CA', 'Regular'),
             ('Danny Way', 1975, 'Portland, OR', 'Regular'),
             ('Colin McKay', 1979, 'Vancouver B.C, Canada', 'Goofy'),
             ('Sean Sheffey', 1980, 'San Diego, CA', 'Regular')]
-
 
 
 primitive =[('Paul Rodriguez', 1985, 'Los Angeles, CA', 'Goofy'),
@@ -403,49 +590,103 @@ zero =     [('Jamie Thomas', 1974, 'Dothan, AL', 'Regular'),
             ('Reggie Kelly', 1994, 'Colombus, GA', 'Regular')]
 
 
-#Make a list of the team info, and the corresponding table name (tuples)
-teams = [(almost, 'Almost'),
-         (april, 'April'),
-         (antiHero, 'AntiHero'),
-         (baker, 'Baker'),
-         (birdhouse, 'Birdhouse'),
-         (blind, 'Blind'),
-         (bloodWizard, 'BloodWizard'),
-         (chocolate, 'Chocolate'),
-         (creature, 'Creature'),
-         (deathWish, 'Deathwish'),
-         (element, 'Element'),
-         (enjoi, 'Enjoi'),
-         (FA, 'FA'),
-         (flip, 'Flip'),
-         (foundation, 'Foundation'),
-         (girl, 'Girl'),
-         (habitat, 'Habitat'),
-         (heroin, 'Heroin'),
-         (madness, 'Madness'),
-         (krooked, 'Krooked'),
-         (pizza, 'Pizza'),
-         (planB, 'PlanB'),
-         (primitive, 'Primitive'),
-         (real, 'Real'),
-         (santaCruz, 'SantaCruz'),
-         (sk8Mafia, 'Sk8Mafia'),
-         (toyMachine, 'ToyMachine'),
-         (zero, 'Zero')]
+def createUpdateTables():
+    con = sql_connection()
 
 
-#Loop through each tuple of teams
-for team in teams:
-    #Sort the lists alphabetically by first name
-    team[0].sort(key=lambda x: x[0])
+    #Make a list of the team info, and the corresponding table name (tuples)
+    teams =[(almost, 'Almost'),
+        (april, 'April'),
+        (antiHero, 'AntiHero'),
+        (baker, 'Baker'),
+        (birdhouse, 'Birdhouse'),
+        (blind, 'Blind'),
+        (bloodWizard, 'BloodWizard'),
+        (chocolate, 'Chocolate'),
+        (creature, 'Creature'),
+        (deathWish, 'Deathwish'),
+        (element, 'Element'),
+        (enjoi, 'Enjoi'),
+        (FA, 'FA'),
+        (flip, 'Flip'),
+        (foundation, 'Foundation'),
+        (girl, 'Girl'),
+        (habitat, 'Habitat'),
+        (heroin, 'Heroin'),
+        (madness, 'Madness'),
+        (krooked, 'Krooked'),
+        (pizza, 'Pizza'),
+        (planB, 'PlanB'),
+        (primitive, 'Primitive'),
+        (real, 'Real'),
+        (santaCruz, 'SantaCruz'),
+        (sk8Mafia, 'Sk8Mafia'),
+        (toyMachine, 'ToyMachine'),
+        (welcome, 'Welcome'),
+        (zero, 'Zero')]
 
-    #Insert the info (if it's not already in)
-    [sql_insert(con, team[1], skaters) for skaters in team[0]]    
 
-    #Update their age by subtracting their birthyear by the current year
-    [sql_update(con, team[1], 'Age', datetime.today().year - skater[1], 'Name', skater[0]) for skater in team[0]]
+    ######################################
+    #This code creates and updates. Because
+    #it takes time, we only run it once at the
+    #start of the program.
+    ######################################
+
+    # Loop through each tuple of teams
+    sql_table(con)
+    for team in teams:
+        # Sort the lists alphabetically by first name
+        team[0].sort(key=lambda x: x[0])
+
+        #Insert the info (if it's not already in)
+        [sql_insert(con, team[1], skaters) for skaters in team[0]]    
+
+        #Update their age by subtracting their birthyear by the current year
+        [sql_update(con, team[1], 'Age', datetime.today().year - skater[1], 'Name', skater[0]) for skater in team[0]]
+
+    main(con,teams)
 
 
 
-    print('\n==============================================', f"                 {team[1].upper()}", '==============================================\n', sep='\n')
-    sql_fetch(con,team[1])
+def main(con,teams):
+
+
+    states = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID',
+    'IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT',
+    'NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC',
+    'SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
+
+    
+    total=0
+    for team in teams:
+        total += sql_len(con, team[1])
+
+    print('1. All Skate Teams')
+    print('2. Skaters from Teams')
+    print('3. Skaters from Specific Location')
+    print('4. Percentage of Skaters from Specific Location')
+    print('5. Percentage of Skaters from All Locations')
+    print('6. Percentage of Regular vs Goofy')
+    print('7. Exit')
+    
+    
+    option = input('\nSelect Option\n')
+
+    if option == '1':
+        allSkateTeams(teams,con)
+    elif option == '2':
+        individualSkateTeam(teams, con)
+    elif option == '3':
+        specificAreaNames(states,con,teams)
+    elif option == '4':
+        specificArea(states,con,teams)
+    elif option == '5':
+        fromAllArea(con, states, teams, total)
+    elif option == '6':
+        regVsGoofy(teams, total,con)
+    elif option == '7':
+        print('Thanks!')
+        exit(0)
+
+
+createUpdateTables()
