@@ -155,7 +155,7 @@ def individualSkateTeam(teams, con):
 
     #This is a fancy way to check if the input is in the list of tuples
     if [item for item in teams if team in item]:
-        print('\n        NAME     |  AGE  |   HOMEWTOWN   |   STANCE\n')
+        print('\n        NAME     |  AGE  |   HOMETOWN   |   STANCE\n')
         sql_fetch(con, team)
         print('\n\n\n\n\n')
         main(con,teams)
